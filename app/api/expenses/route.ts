@@ -30,8 +30,8 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    // Build where clause
-    const where: any = { userId: user.id }
+    // Build where clause (use demo user)
+    const where: any = { userId: DEFAULT_USER_ID }
 
     if (category) {
       where.category = category
