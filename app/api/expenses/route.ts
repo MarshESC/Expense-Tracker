@@ -1,29 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { auth } from '@/lib/auth'
 
-// GET /api/expenses - Fetch user's expenses
+// GET /api/expenses - Fetch expenses (no auth required)
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth()
+    // For demo purposes, use a default user ID or remove userId entirely
+    const DEFAULT_USER_ID = "demo-user"
 
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email }
+    // Check if user exists, create if not
+    let user = await prisma.user.findUnique({
+      where: { id: DEFAULT_USER_ID }
     })
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
+      user = await prisma.user.create({
+        data: {
+          id: DEFAULT_USER_ID,
+          email: "demo@example.com",
+          name: "Demo User"
+        }
+      })
     }
 
     // Get query parameters
