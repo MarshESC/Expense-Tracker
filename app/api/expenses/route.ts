@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
         description: description || null,
         isRecurring: Boolean(isRecurring),
         recurrence: recurrence || null,
-        userId: user.id
+        userId: DEFAULT_USER_ID
       }
     })
 
