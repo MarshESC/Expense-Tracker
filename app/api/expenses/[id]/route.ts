@@ -1,33 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { auth } from '@/lib/auth'
 
-// PUT /api/expenses/[id] - Update existing expense
+// PUT /api/expenses/[id] - Update existing expense (no auth required)
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth()
-
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email }
-    })
-
-    if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
-    }
+    // Use demo user
+    const DEFAULT_USER_ID = "demo-user"
 
     const body = await request.json()
     const { amount, currency, category, date, description, isRecurring, recurrence } = body
